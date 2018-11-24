@@ -2,6 +2,7 @@ from __future__ import print_function, division
 
 import argparse
 from collections import defaultdict
+from glob import glob
 import logging
 import os
 import sys
@@ -16,7 +17,7 @@ from IPython import embed
 from models.cifar10vgg import cifar10vgg
 
 MAX_PER_CLASS = 1000
-CIFAR10_CLASSES = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+CIFAR10_CLASSES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -73,6 +74,21 @@ def infer(args):
         savefile = "data/cifar10_{}_c{}.npy".format(args.split, cls)
         logging.info("Saving activations to %s", savefile)
         np.save(savefile, by_layer)
+
+
+def svd(args):
+    filepaths = glob("data/cifar10_{}*.npy".format(args.split))
+    for filepath in filepaths:
+        h_by_layer = np.load(filepath).item()
+
+        for layer, h in h_by_layer.items():
+            logging.info("Computing SVD for %s layer %s activations of shape %s", filepath, layer, h.shape)
+            # TODO: Should we be taking the multilinear SVD, or reshaping h to (1000, .)?
+            # Take the multilinear SVD, and flatten singular values
+            u, s, vh = np.linalg.svd(h, full_matrices=False)
+            s = s.flatten()
+
+            # TODO: group s and then store
 
 
 if __name__=="__main__":

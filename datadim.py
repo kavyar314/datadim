@@ -16,7 +16,7 @@ from IPython import embed
 from models.cifar10vgg import cifar10vgg
 
 MAX_PER_CLASS = 1000
-CIFAR10_CLASSES = [0, 1, 2, 3, 4, 5]
+CIFAR10_CLASSES = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -46,13 +46,13 @@ def infer(args):
     train_by_class, test_by_class = make_splits()
     X_by_class = train_by_class if args.split == "train" else test_by_class
 
-    model = cifar10vgg(train=False, weight_file="models/cifar10vgg.h5")
+    model = cifar10vgg(train=False, weight_file="data/cifar10vgg.h5")
 
     for cls, X in X_by_class.items():
         by_layer = defaultdict(list)
 
         for i in range(0, X.shape[0], args.bs):
-            logging.info("Inference for class %d: %d/%d", cls, i*args.bs, X.shape[0])
+            logging.info("Inference for class %d: %d/%d", cls, i, X.shape[0])
             batch = X[i:i+args.bs]
             batch = model.normalize_production(batch)
             activations = keract.get_activations(model.model, batch)
@@ -81,8 +81,9 @@ if __name__=="__main__":
     parser.add_argument("--seed", default=1234, required=False, type=int)
     parser.add_argument("--bs", default=10, required=False, type=int)
     parser.add_argument("--split", choices=["train", "test"], default="train")
-    parser.parse_args()
     args = parser.parse_args()
+
+    np.random.seed(args.seed)
 
     if args.task in globals():
         task_function = globals()[args.task]

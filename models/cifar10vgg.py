@@ -15,7 +15,7 @@ from keras import backend as K
 from keras import regularizers
 
 class cifar10vgg:
-    def __init__(self,train=True):
+    def __init__(self,train=True,weight_file='cifar10vgg.h5'):
         self.num_classes = 10
         self.weight_decay = 0.0005
         self.x_shape = [32,32,3]
@@ -24,7 +24,7 @@ class cifar10vgg:
         if train:
             self.model = self.train(self.model)
         else:
-            self.model.load_weights('cifar10vgg.h5')
+            self.model.load_weights(weight_file)
 
 
     def build_model(self):

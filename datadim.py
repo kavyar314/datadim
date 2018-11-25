@@ -18,6 +18,7 @@ from models.cifar10vgg import cifar10vgg
 
 MAX_PER_CLASS = 1000
 CIFAR10_CLASSES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+OUT_PATH = './'
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -84,10 +85,16 @@ def svd(args):
         for layer, h in h_by_layer.items():
             logging.info("Computing SVD for %s layer %s activations of shape %s", filepath, layer, h.shape)
             # TODO: Should we be taking the multilinear SVD, or reshaping h to (1000, .)?
+            # KR: I think we should flatten first b/c in the last couple layers (FC), we will already have "flat" matrices.
+            # KR: We might be able to speed up by not calculating u, v if we aren't planning to use them
+            u, s, vh = np.linalg.svd(h.reshape(MAX_PER_CLASS, -1), full_matrices=False)
             # Take the multilinear SVD, and flatten singular values
-            u, s, vh = np.linalg.svd(h, full_matrices=False)
-            s = s.flatten()
+            # u, s, vh = np.linalg.svd(h, full_matrices=False)
+            # s = s.flatten()
 
+            os.makedirs(OUT_PATH + 'singular_values/')
+            savefile = 'singularValues_{}.npy'.format(layer)
+            np.save(savefile, s)
             # TODO: group s and then store
 
 

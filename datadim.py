@@ -93,7 +93,7 @@ def svd(args):
             # s = s.flatten()
 
             os.makedirs(OUT_PATH + 'singular_values/')
-            savefile = 'singularValues_{}.npy'.format(layer)
+            savefile = 'singularValues_{}_{}*.npy'.format(layer, args.split)
             np.save(savefile, s)
             # TODO: group s and then store
 

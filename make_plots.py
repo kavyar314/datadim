@@ -1,5 +1,5 @@
 import matplotlib
-mathplotlib.use('Agg')
+matplotlib.use('Agg')
 from matplotlib import pyplot as plt
 import numpy as np
 import logging

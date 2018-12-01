@@ -95,7 +95,7 @@ def svd(args):
             path_full = OUT_PATH + 'singular_values'
             if 'singular_values' not in os.listdir(OUT_PATH):
                 os.makedirs(path_full)
-            savefile = '{}/singularValues_{}*_{}_{}.npy'.format(path_full, args.split, layer.split('/')[0], args.split)
+            savefile = '{}/singularValues_{}_{}.npy'.format(path_full, filepath.strip('data/').strip('.npy'), layer.split('/')[0])
             np.save(savefile, s)
             # TODO: group s and then store
 

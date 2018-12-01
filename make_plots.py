@@ -8,7 +8,7 @@ import os
 PATH_TO_SV = './singular_values/'
 
 OUT_PATH = './singular_values/plots/'
-if OUT_PATH not in os.listdir('./'):
+if 'plots' not in os.listdir('./singular_values'):
 	os.makedirs(OUT_PATH)
 
 def plot_singular_values(sv_array, specs):
@@ -21,11 +21,12 @@ def plot_singular_values(sv_array, specs):
 	plt.close()
 
 def open_and_process_singular_values(fname):
+        print fname
 	singular_vals = np.load(os.path.join(PATH_TO_SV + fname))
 	return singular_vals/singular_vals[0]
 
 if __name__ == '__main__':
-	sv_files = os.listdir(PATH_TO_SV)
+	sv_files = [f for f in os.listdir(PATH_TO_SV) if '.npy' in f]
 	for f in sv_files:
 		logging.info('Making plot for %s', f)
 		sv = open_and_process_singular_values(f)

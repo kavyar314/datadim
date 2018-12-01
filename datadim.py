@@ -14,7 +14,7 @@ import numpy as np
 
 from IPython import embed
 
-from models.cifar10vgg import cifar10vgg
+from cifar10vgg import cifar10vgg
 
 MAX_PER_CLASS = 1000
 CIFAR10_CLASSES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -92,8 +92,10 @@ def svd(args):
             # u, s, vh = np.linalg.svd(h, full_matrices=False)
             # s = s.flatten()
 
-            os.makedirs(OUT_PATH + 'singular_values/')
-            savefile = 'singularValues_{}_{}*.npy'.format(layer, args.split)
+            path_full = OUT_PATH + 'singular_values'
+            if 'singular_values' not in os.listdir(OUT_PATH):
+                os.makedirs(path_full)
+            savefile = '{}/singularValues_{}_{}.npy'.format(path_full, layer.split('/')[0], args.split)
             np.save(savefile, s)
             # TODO: group s and then store
 

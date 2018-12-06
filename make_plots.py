@@ -9,6 +9,8 @@ PATH_TO_SV = './singular_values/'
 
 OUT_PATH = './singular_values/plots/'
 
+FAILED_FILES = './plot_failed_files.txt'
+
 LOG = True
 
 if 'plots' not in os.listdir('./singular_values'):
@@ -35,8 +37,13 @@ if __name__ == '__main__':
 	sv_files = [f for f in os.listdir(PATH_TO_SV) if '.npy' in f]
 	for f in sv_files:
 		logging.info('Making plot for %s', f)
-		sv = open_and_process_singular_values(f)
-		specs = f.strip('.npy')
-		plot_singular_values(sv, specs)
+		try:
+			sv = open_and_process_singular_values(f)
+			specs = f.strip('.npy')
+			plot_singular_values(sv, specs)
+		except:
+			with open(FAILED_FILES, 'a') as fail:
+				fail.write(f)
+			print('{} failed'.format(f))
 
 

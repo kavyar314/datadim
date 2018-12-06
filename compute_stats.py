@@ -20,7 +20,7 @@ def calc_stats(singular_values, specs):
 	details = specs.split('_')
 	mean = np.mean(singular_values)
 	stdev = np.std(singular_values)
-	out = "{}, {}, {}, {}, {}, {}".format{details[1], details[2], details[3], details[5], mean, stdev}
+	out = "{}, {}, {}, {}, {}, {}".format(details[1], details[2], details[3], details[5], mean, stdev)
 	with open(OUT_FILE, 'a') as f:
 		f.write(out)
 

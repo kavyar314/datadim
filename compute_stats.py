@@ -5,6 +5,8 @@ OUT_FILE = './singular_value_stats.csv'
 
 PATH_TO_SV = './singular_values/'
 
+FAILED_FILES = './failed_files.txt'
+
 def calc_mean(singular_values):
 	return np.mean(singular_values)
 
@@ -27,4 +29,9 @@ def calc_stats(singular_values, specs):
 if __name__ == '__main__':
 	sv_files = [f for f in os.listdir(PATH_TO_SV) if '.npy' in f]
 	for f in sv_files:
-		calc_stats(np.load(os.path.join(PATH_TO_SV, f)), f.strip('.npy'))
+		try:
+			calc_stats(np.load(os.path.join(PATH_TO_SV, f)), f.strip('.npy'))
+		except:
+			with open(FAILED_FILES, 'a') as fail:
+				fail.write(f)
+			print("{} failed".format(f))

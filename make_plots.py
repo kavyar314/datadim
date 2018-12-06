@@ -51,7 +51,7 @@ if __name__ == '__main__':
 	by_layer = dict(zip(layers, [[f for f in sv_files if f.split('_')[5]==l] for l in layers]))
 	for layer in layers:
 		sv_list = []
-		specs = '_'.join(by_layer[layer][0].strip('.npy').split().pop(3))
+		specs = '_'.join(by_layer[layer][0].strip('.npy').split('_').pop(3))
 		for f in by_layer[layer]: #this area is broken -- need to only plot after the list is complete and naming needs to be fixed
 			logging.info('Making plot for %s', f)
 			try:

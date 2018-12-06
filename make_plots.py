@@ -27,7 +27,7 @@ def plot_singular_values(sv_array, specs, log=LOG):
 	plt.close()
 
 def open_and_process_singular_values(fname):
-        print fname
+    #print fname
 	singular_vals = np.load(os.path.join(PATH_TO_SV + fname))
 	return singular_vals/singular_vals[0]
 

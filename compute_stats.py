@@ -18,9 +18,9 @@ def calc_stats(singular_values, specs):
 	# singularValues_cifar10_train_c3_activation_15.npy
 	# [0]_[1]model_[2]split_[3]class_[4]_[5]layer.npy
 	details = specs.split('_')
-	mean = np.mean(singular_values)
-	stdev = np.std(singular_values)
-	out = "{}, {}, {}, {}, {}, {}".format(details[1], details[2], details[3], details[5], mean, stdev)
+	mean = np.mean(singular_values/singular_values[0])
+	stdev = np.std(singular_values/singular_values[0])
+	out = "{}, {}, {}, {}, {}, {} \n".format(details[1], details[2], details[3], details[5], mean, stdev)
 	with open(OUT_FILE, 'a') as f:
 		f.write(out)
 

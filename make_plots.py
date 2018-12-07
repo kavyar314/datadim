@@ -28,9 +28,9 @@ def plot_singular_values(sv_arrays, specs, log=LOG):
 		if sv_array[0] != 1:
 			sv_array/sv_array[0]
 		fname = specs + '.pdf'
-		if log:
-			sv_array = np.log(sv_array)
-			fname = 'log' + fname
+	if log:
+		sv_arrays = [np.log(sv_array) for sv_array in sv_arrays]
+		fname = 'log' + fname
 	plt.figure()
 	for sv_array in sv_arrays:
 		plt.plot(sv_array)

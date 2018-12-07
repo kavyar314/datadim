@@ -47,9 +47,11 @@ def open_and_process_singular_values(fname):
 
 if __name__ == '__main__':
 	sv_files = [f for f in os.listdir(PATH_TO_SV) if '.npy' in f]
-	layers = [f.split('_')[5] for f in sv_files]
+	layers = list(set([f.split('_')[5] for f in sv_files]))
+        #print layers
 	by_layer = dict(zip(layers, [[f for f in sv_files if f.split('_')[5]==l] for l in layers]))
-	for layer in layers:
+        #print len(by_layer[layers[0]])
+        for layer in layers:
 		sv_list = []
 		list_spec = by_layer[layer][0].strip('.npy').split('_')
 		specs = '_'.join(list_spec[:3] + list_spec[4:])

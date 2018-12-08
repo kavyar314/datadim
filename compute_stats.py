@@ -55,7 +55,7 @@ if __name__ == '__main__':
 	sv_files = [f for f in os.listdir(PATH_TO_SV) if '.npy' in f]
 	for f in sv_files:
 		try:
-			if args.n_stats='all':
+			if args.n_stats=='all':
 				all_the_stats(np.load(os.path.join(PATH_TO_SV, f)), f.strip('.npy'))
 			else:
 				calc_stats(np.load(os.path.join(PATH_TO_SV, f)), f.strip('.npy'))

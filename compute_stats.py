@@ -11,6 +11,8 @@ PATH_TO_SV = './singular_values/'
 
 FAILED_FILES = './failed_files.txt'
 
+n_stats = 'all'
+
 p = 100
 
 STAT_FILE_FORMAT = './singular_value_statistics_%s.csv'
@@ -49,13 +51,13 @@ def all_the_stats(singular_values, specs):
 
 
 if __name__ == '__main__':
-	parser = argparse.ArgumentParser()
-	parser.add_argument('--n_stats', type=str)
-	args = parser.parse_args()
+	#parser = argparse.ArgumentParser()
+	#parser.add_argument('--n_stats', type=str)
+	#args = parser.parse_args()
 	sv_files = [f for f in os.listdir(PATH_TO_SV) if '.npy' in f]
 	for f in sv_files:
 		try:
-			if args.n_stats=='all':
+			if n_stats=='all':
 				all_the_stats(np.load(os.path.join(PATH_TO_SV, f)), f.strip('.npy'))
 			else:
 				calc_stats(np.load(os.path.join(PATH_TO_SV, f)), f.strip('.npy'))

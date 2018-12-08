@@ -99,6 +99,8 @@ def svd(args):
             np.save(savefile, s)
             # TODO: group s and then store
 
+def pairwise_svd(args):
+    pass
 
 if __name__=="__main__":
     parser = argparse.ArgumentParser(description="Launcher for datadim experiments")

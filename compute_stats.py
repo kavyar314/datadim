@@ -55,13 +55,14 @@ if __name__ == '__main__':
 	#parser = argparse.ArgumentParser()
 	#parser.add_argument('--n_stats', type=str)
 	#args = parser.parse_args()
-	sv_files = [f for f in os.listdir(os.path.join(PATH_TO_SV, model)) if '.npy' in f]
+	full_path_to_sv = os.path.join(PATH_TO_SV, model)
+	sv_files = [f for f in os.listdir(full_path_to_sv) if '.npy' in f]
 	for f in sv_files:
 		try:
 			if n_stats=='all':
-				all_the_stats(np.load(os.path.join(PATH_TO_SV, f)), f.strip('.npy'))
+				all_the_stats(np.load(os.path.join(full_path_to_sv, f)), f.strip('.npy'))
 			else:
-				calc_stats(np.load(os.path.join(PATH_TO_SV, f)), f.strip('.npy'))
+				calc_stats(np.load(os.path.join(full_path_to_sv, f)), f.strip('.npy'))
 		except:
 			with open(FAILED_FILES, 'a') as fail:
 				fail.write(f)

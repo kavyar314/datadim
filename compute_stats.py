@@ -37,7 +37,7 @@ def calc_stats(singular_values, specs):
 	with open(OUT_FILE, 'a') as f:
 		f.write(out)
 
-def all_the_stats(singular_values, specs):
+def all_the_stats(singular_values, specs, outfile_path):
 	#stuff
 	# 5%, high p-norm of spectrum, \sigma_2/\sigma_1, \sigma_3/\sigma_1
 	details = specs.split('_')
@@ -45,9 +45,8 @@ def all_the_stats(singular_values, specs):
 	p_norm = np.linalg.norm(singular_values/singular_values[0], p)
 	first_dropoff = singular_values[1]/singular_values[0]
 	second_dropoff = singular_values[2]/singular_values[0]
-	outfile = STAT_FILE_FORMAT % datetime.datetime.fromtimestamp(time.time()).isoformat()
 	out = "{}, {}, {}, {}, {}, {}, {}, {}\n".format(details[1], details[2], details[3], details[5], five_percent, p_norm, first_dropoff, second_dropoff)
-	with open(outfile, 'a') as f:
+	with open(outfile_path, 'a') as f:
 		f.write(out)
 
 
@@ -57,10 +56,11 @@ if __name__ == '__main__':
 	#args = parser.parse_args()
 	full_path_to_sv = os.path.join(PATH_TO_SV, model)
 	sv_files = [f for f in os.listdir(full_path_to_sv) if '.npy' in f]
+	outfile_path = STAT_FILE_FORMAT % datetime.datetime.fromtimestamp(time.time()).isoformat()
 	for f in sv_files:
 		try:
 			if n_stats=='all':
-				all_the_stats(np.load(os.path.join(full_path_to_sv, f)), f.strip('.npy'))
+				all_the_stats(np.load(os.path.join(full_path_to_sv, f)), f.strip('.npy'), outfile_path)
 			else:
 				calc_stats(np.load(os.path.join(full_path_to_sv, f)), f.strip('.npy'))
 		except:

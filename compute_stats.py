@@ -1,11 +1,19 @@
 import numpy as np
 import os
+import datetime
+import time
+
+import argparse
 
 OUT_FILE = './singular_value_stats.csv'
 
 PATH_TO_SV = './singular_values/'
 
 FAILED_FILES = './failed_files.txt'
+
+p = 100
+
+STAT_FILE_FORMAT = './singular_value_statistics_%s.csv'
 
 def calc_mean(singular_values):
 	return np.mean(singular_values)
@@ -26,11 +34,31 @@ def calc_stats(singular_values, specs):
 	with open(OUT_FILE, 'a') as f:
 		f.write(out)
 
+def all_the_stats(singular_values, specs):
+	#stuff
+	# 5%, high p-norm of spectrum, \sigma_2/\sigma_1, \sigma_3/\sigma_1
+	details = specs.split('_')
+	five_percent = singular_values[singular_values.shape[0]/20]/singular_values[0]
+	p_norm = np.linalg.norm(singular_values/singular_values[0], p)
+	first_dropoff = singular_values[1]/singular_values[0]
+	second_dropoff = singular_values[2]/singular_values[0]
+	outfile = STAT_FILE_FORMAT % datetime.datetime.fromtimestamp(time.time()).isoformat()
+	out = "{}, {}, {}, {}, {}, {}, {}, {}\n".format(details[1], details[2], details[3], details[5], five_percent, p_norm, first_dropoff, second_dropoff)
+	with open(outfile, 'a') as f:
+		f.write(out)
+
+
 if __name__ == '__main__':
+	parser = argparse.ArgumentParser()
+	parser.add_argument('--n_stats', type=str)
+	args = parser.parse_args()
 	sv_files = [f for f in os.listdir(PATH_TO_SV) if '.npy' in f]
 	for f in sv_files:
 		try:
-			calc_stats(np.load(os.path.join(PATH_TO_SV, f)), f.strip('.npy'))
+			if args.n_stats='all':
+				all_the_stats(np.load(os.path.join(PATH_TO_SV, f)), f.strip('.npy'))
+			else:
+				calc_stats(np.load(os.path.join(PATH_TO_SV, f)), f.strip('.npy'))
 		except:
 			with open(FAILED_FILES, 'a') as fail:
 				fail.write(f)

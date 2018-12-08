@@ -14,6 +14,7 @@ FAILED_FILES = './failed_files.txt'
 n_stats = 'all'
 
 p = 100
+model = 'vgg'
 
 STAT_FILE_FORMAT = './singular_value_statistics_%s.csv'
 
@@ -54,7 +55,7 @@ if __name__ == '__main__':
 	#parser = argparse.ArgumentParser()
 	#parser.add_argument('--n_stats', type=str)
 	#args = parser.parse_args()
-	sv_files = [f for f in os.listdir(PATH_TO_SV) if '.npy' in f]
+	sv_files = [f for f in os.listdir(os.path.join(PATH_TO_SV, model)) if '.npy' in f]
 	for f in sv_files:
 		try:
 			if n_stats=='all':

@@ -117,7 +117,7 @@ def pairwise_svd(args):
                 path_full = OUT_PATH + 'pairwise_sv'
                 if 'pairwise_sv' not in os.listdir(OUT_PATH):
                     os.makedirs(path_full)
-                savefile = '{}/singularValues_{}_{}_{}.npy'.format(path_full, file1.strip('data/').strip('.npy'), file2.split('_')[-1].strip('.npy'), layer.split('/')[0])
+                savefile = '{}/singularValues_{}_{}_{}.npy'.format(path_full, file1.strip('data/vgg/').strip('.npy'), file2.split('_')[-1].strip('.npy'), layer.split('/')[0])
                 np.save(savefile, s)
 
 

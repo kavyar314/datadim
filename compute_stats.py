@@ -42,7 +42,7 @@ def all_the_stats(singular_values, specs, outfile_path, p_list=p_list):
 	# 5%, high p-norm of spectrum, \sigma_2/\sigma_1, \sigma_3/\sigma_1
 	details = specs.split('_')
 	five_percent = singular_values[singular_values.shape[0]/20]/singular_values[0]
-	p_norms = [np.linalg.norm(singular_values/singular_values[0], p) for p in p_list]
+	p_norms = [str(np.linalg.norm(singular_values/singular_values[0], p)) for p in p_list]
 	first_dropoff = singular_values[1]/singular_values[0]
 	second_dropoff = singular_values[2]/singular_values[0]
 	out = "{}, {}, {}, {}, {}, {}, {}, {}\n".format(details[1], details[2], details[3], details[5], five_percent, ','.join(p_norms), first_dropoff, second_dropoff)

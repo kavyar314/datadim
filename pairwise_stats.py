@@ -11,7 +11,7 @@ if __name__ == '__main__':
 	for f in sv_files:
 		sv = np.load(os.path.join(path_to_pairwise, f))
 		spec = f.split('_')
-		spec.pop()
+		spec.pop(0)
 		spec = '_'.join(spec).strip('.npy')
 		print spec
 		all_the_stats(sv, spec, outfile_path)

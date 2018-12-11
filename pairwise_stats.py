@@ -9,7 +9,7 @@ outfile_path = './pairwise_statistics.csv'
 if __name__ == '__main__':
 	sv_files = [f for f in os.listdir(path_to_pairwise) if '.npy' in f]
 	for f in sv_files:
-		sv = np.load(f)
+		sv = np.load(os.path.join(path_to_pairwise, f))
 		spec = f.split('_')
 		spec.pop()
 		spec = ''.join(spec).strip('.npy')

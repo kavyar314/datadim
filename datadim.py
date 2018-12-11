@@ -15,6 +15,7 @@ import numpy as np
 from IPython import embed
 
 from cifar10vgg import cifar10vgg
+from models.mlp import MLP
 
 MAX_PER_CLASS = 1000
 CIFAR10_CLASSES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -48,7 +49,14 @@ def infer(args):
     train_by_class, test_by_class = make_splits()
     X_by_class = train_by_class if args.split == "train" else test_by_class
 
-    model = cifar10vgg(train=False, weight_file="data/cifar10vgg.h5")
+    if args.model == "vgg":
+        model = cifar10vgg(train=False, weight_file="data/cifar10vgg.h5")
+    elif args.model == "mlp5":
+        model = MLP(train=False, num_layers=5, hidden_dim=1000, weight_file="models/weights/mlp_l5_h1000.h5")
+    elif args.model == "mlp8":
+        model = MLP(train=False, num_layers=8, hidden_dim=1000, weight_file="models/weights/mlp_l8_h1000.h5")
+    elif args.model == "mlp12":
+        model = MLP(train=False, num_layers=12, hidden_dim=1000, weight_file="models/weights/mlp_l12_h1000.h5")
 
     for cls, X in X_by_class.items():
         by_layer = defaultdict(list)
@@ -58,6 +66,8 @@ def infer(args):
             batch = X[i:i+args.bs]
             batch = model.normalize_production(batch)
             activations = keract.get_activations(model.model, batch)
+
+            by_layer["input"].append(batch)  # Input after normalization
 
             for layer, h in activations.items():
                 # Select activations after Relu and Softmax
@@ -71,8 +81,8 @@ def infer(args):
         for layer, h_list in by_layer.items():
             by_layer[layer] = np.concatenate(h_list, axis=0)
 
-        os.makedirs("data", exist_ok=True)
-        savefile = "data/cifar10_{}_c{}.npy".format(args.split, cls)
+        os.makedirs("data/{}".format(args.model), exist_ok=True)
+        savefile = "data/{}/cifar10_{}_c{}.npy".format(args.model, args.split, cls)
         logging.info("Saving activations to %s", savefile)
         np.save(savefile, by_layer)
 
@@ -81,7 +91,7 @@ def svd(args):
     '''
     NB this can't be run without fixing file paths
     '''
-    filepaths = glob("data/cifar10_{}*.npy".format(args.split))
+    filepaths = glob("data/{}/cifar10_{}*.npy".format(args.model, args.split))
     for filepath in filepaths:
         h_by_layer = np.load(filepath).item()
 
@@ -95,12 +105,13 @@ def svd(args):
             # u, s, vh = np.linalg.svd(h, full_matrices=False)
             # s = s.flatten()
 
-            path_full = OUT_PATH + 'singular_values'
-            if 'singular_values' not in os.listdir(OUT_PATH):
+            path_full = os.path.join('singular_values', args.model)
+            if not os.path.exists(path_full):
                 os.makedirs(path_full)
-            savefile = '{}/singularValues_{}_{}.npy'.format(path_full, filepath.strip('data/').strip('.npy'), layer.split('/')[0])
+            savefile = '{}/singularValues_{}_{}.npy'.format(path_full, filepath.strip('data/{}/'.format(args.model)).strip('.npy'), layer.split('/')[0])
             np.save(savefile, s)
             # TODO: group s and then store
+
 
 def pairwise_svd(args):
     files = glob("data/vgg/cifar10_{}*.npy".format(args.split))
@@ -122,14 +133,13 @@ def pairwise_svd(args):
                     np.save(savefile, s)
 
 
-    
-
 if __name__=="__main__":
     parser = argparse.ArgumentParser(description="Launcher for datadim experiments")
     parser.add_argument("task", metavar="T", type=str)
     parser.add_argument("--seed", default=1234, required=False, type=int)
     parser.add_argument("--bs", default=10, required=False, type=int)
     parser.add_argument("--split", choices=["train", "test"], default="train")
+    parser.add_argument("--model", choices=["vgg", "mlp5", "mlp8", "mlp12"], default="vgg")
     args = parser.parse_args()
 
     np.random.seed(args.seed)

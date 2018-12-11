@@ -12,6 +12,6 @@ if __name__ == '__main__':
 		sv = np.load(os.path.join(path_to_pairwise, f))
 		spec = f.split('_')
 		spec.pop()
-		spec = ''.join(spec).strip('.npy')
+		spec = '_'.join(spec).strip('.npy')
 		print spec
 		all_the_stats(sv, spec, outfile_path)

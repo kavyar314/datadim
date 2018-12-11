@@ -112,7 +112,7 @@ def pairwise_svd(args):
                 h2_by_layer = np.load(file2).item()
                 for layer in h1_by_layer.keys():
                     h_total = np.vstack((h1_by_layer[layer], h2_by_layer[layer]))
-                    print(h_total.shape)
+                    print(layer, h_total.shape)
                     dim = h1_by_layer[layer].shape[0] + h2_by_layer[layer].shape[0]
                     _, s, _ = np.linalg.svd(h_total.reshape(dim, -1), full_matrices=False)
                     path_full = OUT_PATH + 'pairwise_sv'

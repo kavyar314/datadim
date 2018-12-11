@@ -37,7 +37,7 @@ def calc_stats(singular_values, specs):
 	with open(OUT_FILE, 'a') as f:
 		f.write(out)
 
-def all_the_stats(singular_values, specs, outfile_path):
+def all_the_stats(singular_values, specs, outfile_path, p_list=p_list):
 	#stuff
 	# 5%, high p-norm of spectrum, \sigma_2/\sigma_1, \sigma_3/\sigma_1
 	details = specs.split('_')

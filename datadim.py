@@ -124,14 +124,19 @@ def pairwise_svd(args):
         h1_by_layer = np.load(file1).item()
         h2_by_layer = np.load(file2).item()
         for layer in h1_by_layer.keys():
-            h_total = np.vstack((h1_by_layer[layer], h2_by_layer[layer]))
-            print(layer, h_total.shape)
-            dim = h1_by_layer[layer].shape[0] + h2_by_layer[layer].shape[0]
-            _, s, _ = np.linalg.svd(h_total.reshape(dim, -1), full_matrices=False)
             path_full = os.path.join(OUT_PATH, 'pairwise_sv', args.model)
             if not os.path.exists(path_full):
                 os.makedirs(path_full)
             savefile = '{}/singularValues_{}_{}_{}.npy'.format(path_full, file1.strip('data/{}/'.format(args.model)).strip('.npy'), file2.split('_')[-1].strip('.npy'), layer.split('/')[0])
+
+            if os.path.isfile(savefile):
+                continue
+
+            h_total = np.vstack((h1_by_layer[layer], h2_by_layer[layer]))
+            print(layer, h_total.shape)
+            dim = h1_by_layer[layer].shape[0] + h2_by_layer[layer].shape[0]
+            _, s, _ = np.linalg.svd(h_total.reshape(dim, -1), full_matrices=False)
+
             np.save(savefile, s)
 
     activation_file_pairs = []
@@ -139,8 +144,9 @@ def pairwise_svd(args):
         for file2 in files[i+1:]:
             activation_file_pairs.append((file1, file2))
 
-    num_cores = multiprocessing.cpu_count()
-    Parallel(n_jobs=num_cores)(delayed(compute)(file1, file2) for file1, file2 in activation_file_pairs)
+    if args.workers < 1:
+        args.workers = multiprocessing.cpu_count()
+    Parallel(n_jobs=args.workers)(delayed(compute)(file1, file2) for file1, file2 in activation_file_pairs)
 
 if __name__=="__main__":
     parser = argparse.ArgumentParser(description="Launcher for datadim experiments")
@@ -149,6 +155,7 @@ if __name__=="__main__":
     parser.add_argument("--bs", default=10, required=False, type=int)
     parser.add_argument("--split", choices=["train", "test"], default="train")
     parser.add_argument("--model", choices=["vgg", "mlp5", "mlp8", "mlp12"], default="vgg")
+    parser.add_argument("--workers", default=-1, type=int)
     args = parser.parse_args()
 
     np.random.seed(args.seed)

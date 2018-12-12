@@ -7,6 +7,9 @@ import logging
 import os
 import sys
 
+from joblib import Parallel, delayed
+import multiprocessing
+
 import keras
 from keras.datasets import cifar10
 import keract
@@ -114,24 +117,30 @@ def svd(args):
 
 
 def pairwise_svd(args):
-    files = glob("data/vgg/cifar10_{}*.npy".format(args.split))
-    print(len(files))
-    for file1 in files:
-        for file2 in files:
-            if file1 != file2:
-                h1_by_layer = np.load(file1).item()
-                h2_by_layer = np.load(file2).item()
-                for layer in h1_by_layer.keys():
-                    h_total = np.vstack((h1_by_layer[layer], h2_by_layer[layer]))
-                    print(layer, h_total.shape)
-                    dim = h1_by_layer[layer].shape[0] + h2_by_layer[layer].shape[0]
-                    _, s, _ = np.linalg.svd(h_total.reshape(dim, -1), full_matrices=False)
-                    path_full = OUT_PATH + 'pairwise_sv'
-                    if 'pairwise_sv' not in os.listdir(OUT_PATH):
-                        os.makedirs(path_full)
-                    savefile = '{}/singularValues_{}_{}_{}.npy'.format(path_full, file1.strip('data/vgg/').strip('.npy'), file2.split('_')[-1].strip('.npy'), layer.split('/')[0])
-                    np.save(savefile, s)
+    files = glob("data/{}/cifar10_{}*.npy".format(args.model, args.split))
+    print("Found %d activation files" % len(files))
 
+    def compute(file1, file2):
+        h1_by_layer = np.load(file1).item()
+        h2_by_layer = np.load(file2).item()
+        for layer in h1_by_layer.keys():
+            h_total = np.vstack((h1_by_layer[layer], h2_by_layer[layer]))
+            print(layer, h_total.shape)
+            dim = h1_by_layer[layer].shape[0] + h2_by_layer[layer].shape[0]
+            _, s, _ = np.linalg.svd(h_total.reshape(dim, -1), full_matrices=False)
+            path_full = os.path.join(OUT_PATH, 'pairwise_sv', args.model)
+            if not os.path.exists(path_full):
+                os.makedirs(path_full)
+            savefile = '{}/singularValues_{}_{}_{}.npy'.format(path_full, file1.strip('data/{}/'.format(args.model)).strip('.npy'), file2.split('_')[-1].strip('.npy'), layer.split('/')[0])
+            np.save(savefile, s)
+
+    activation_file_pairs = []
+    for i, file1 in enumerate(files):
+        for file2 in files[i+1:]:
+            activation_file_pairs.append((file1, file2))
+
+    num_cores = multiprocessing.cpu_count()
+    Parallel(n_jobs=num_cores)(delayed(compute)(file1, file2) for file1, file2 in activation_file_pairs)
 
 if __name__=="__main__":
     parser = argparse.ArgumentParser(description="Launcher for datadim experiments")

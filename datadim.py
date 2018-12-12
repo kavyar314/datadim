@@ -116,21 +116,21 @@ def svd(args):
 def pairwise_svd(args):
     files = glob("data/vgg/cifar10_{}*.npy".format(args.split))
     print(len(files))
-    for file1 in files:
-        for file2 in files:
-            if file1 != file2:
-                h1_by_layer = np.load(file1).item()
-                h2_by_layer = np.load(file2).item()
-                for layer in h1_by_layer.keys():
-                    h_total = np.vstack((h1_by_layer[layer], h2_by_layer[layer]))
-                    print(layer, h_total.shape)
-                    dim = h1_by_layer[layer].shape[0] + h2_by_layer[layer].shape[0]
-                    _, s, _ = np.linalg.svd(h_total.reshape(dim, -1), full_matrices=False)
-                    path_full = OUT_PATH + 'pairwise_sv'
-                    if 'pairwise_sv' not in os.listdir(OUT_PATH):
-                        os.makedirs(path_full)
-                    savefile = '{}/singularValues_{}_{}_{}.npy'.format(path_full, file1.strip('data/vgg/').strip('.npy'), file2.split('_')[-1].strip('.npy'), layer.split('/')[0])
-                    np.save(savefile, s)
+    for f in range(len(files)):
+        file1 = files[f]
+        for file2 in files[f+1:]:
+            h1_by_layer = np.load(file1).item()
+            h2_by_layer = np.load(file2).item()
+            for layer in h1_by_layer.keys():
+                h_total = np.vstack((h1_by_layer[layer], h2_by_layer[layer]))
+                print(layer, h_total.shape)
+                dim = h1_by_layer[layer].shape[0] + h2_by_layer[layer].shape[0]
+                _, s, _ = np.linalg.svd(h_total.reshape(dim, -1), full_matrices=False)
+                path_full = OUT_PATH + 'pairwise_sv'
+                if 'pairwise_sv' not in os.listdir(OUT_PATH):
+                    os.makedirs(path_full)
+                savefile = '{}/singularValues_{}_{}_{}.npy'.format(path_full, file1.strip('data/vgg/').strip('.npy'), file2.split('_')[-1].strip('.npy'), layer.split('/')[0])
+                np.save(savefile, s)
 
 
 if __name__=="__main__":

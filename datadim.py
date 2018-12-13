@@ -12,6 +12,7 @@ import multiprocessing
 
 import keras
 from keras.datasets import cifar10
+from keras import optimizers
 import keract
 import numpy as np
 
@@ -37,31 +38,61 @@ def make_splits():
         # Randomly sample datapoints from class
         idx, _ = np.where(y_train == cls)
         idx_train = np.random.choice(idx, MAX_PER_CLASS, replace=False)
-        train_by_class[cls] = x_train[idx_train]
+        train_by_class[cls] = (x_train[idx_train], y_train[idx_train])
 
         idx_test, _ = np.where(y_test == cls)
-        test_by_class[cls] = x_test[idx_test]
+        test_by_class[cls] = (x_test[idx_test], y_test[idx_test])
         assert(idx_test.size <= MAX_PER_CLASS)
 
-        logging.info("Class %d Train: %s Test %s", cls, train_by_class[cls].shape, test_by_class[cls].shape)
+        logging.info("Class %d Train: %s Test %s", cls, train_by_class[cls][0].shape, test_by_class[cls][0].shape)
 
     return train_by_class, test_by_class
 
 
-def infer(args):
-    train_by_class, test_by_class = make_splits()
-    X_by_class = train_by_class if args.split == "train" else test_by_class
-
-    if args.model == "vgg":
+def _create_model(model_name):
+    if model_name == "vgg":
         model = cifar10vgg(train=False, weight_file="data/cifar10vgg.h5")
-    elif args.model == "mlp5":
+    elif model_name == "mlp5":
         model = MLP(train=False, num_layers=5, hidden_dim=1000, weight_file="models/weights/mlp_l5_h1000.h5")
-    elif args.model == "mlp8":
+    elif model_name == "mlp8":
         model = MLP(train=False, num_layers=8, hidden_dim=1000, weight_file="models/weights/mlp_l8_h1000.h5")
-    elif args.model == "mlp12":
+    elif model_name == "mlp12":
         model = MLP(train=False, num_layers=12, hidden_dim=1000, weight_file="models/weights/mlp_l12_h1000.h5")
 
-    for cls, X in X_by_class.items():
+    return model
+
+
+def evaluate(args):
+    assert(args.split == "train")
+
+    train_by_class, test_by_class = make_splits()
+    XY_by_class = train_by_class if args.split == "train" else test_by_class
+
+    model = _create_model(args.model)
+    sgd = optimizers.SGD(lr=0.01, momentum=0.9, nesterov=True)
+    model.model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
+
+    accuracies = []
+    for cls, (X, y) in XY_by_class.items():
+        assert(X.shape[0] == 1000)
+
+        X = model.normalize_production(X)
+        y = keras.utils.to_categorical(y, model.num_classes)
+        _loss, acc = model.model.evaluate(X, y, batch_size=100, verbose=2)
+        accuracies.append(acc)
+
+        print("Train 1000 acc, model {}, class {}: {}".format(args.model, cls, acc))
+
+    print("Train 1000 acc, model {}, overall: {}".format(args.model, np.mean(accuracies)))
+
+
+def infer(args):
+    train_by_class, test_by_class = make_splits()
+    XY_by_class = train_by_class if args.split == "train" else test_by_class
+
+    model = _create_model(args.model)
+
+    for cls, (X, _y) in XY_by_class.items():
         by_layer = defaultdict(list)
 
         for i in range(0, X.shape[0], args.bs):
@@ -70,7 +101,7 @@ def infer(args):
             batch = model.normalize_production(batch)
             activations = keract.get_activations(model.model, batch)
 
-            by_layer["input"].append(batch)  # Input after normalization
+            by_layer["input_0"].append(batch)  # Input after normalization
 
             for layer, h in activations.items():
                 # Select activations after Relu and Softmax

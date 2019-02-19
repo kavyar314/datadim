@@ -139,11 +139,12 @@ def svd(args):
             # u, s, vh = np.linalg.svd(h, full_matrices=False)
             # s = s.flatten()
 
-            path_full = os.path.join('singular_values', args.model)
+            path_full = os.path.join('singular_values_vecs', args.model)
             if not os.path.exists(path_full):
                 os.makedirs(path_full)
-            savefile = '{}/singularValues_{}_{}.npy'.format(path_full, filepath.strip('data/{}/'.format(args.model)).strip('.npy'), layer.split('/')[0])
-            np.save(savefile, s)
+            savefile = '{}/%s_{}_{}.npy'.format(path_full, filepath.strip('data/{}/'.format(args.model)).strip('.npy'), layer.split('/')[0])
+            np.save(savefile % 'singularValues', s)
+            np.save(savefile % 'singularVectors', u)
             # TODO: group s and then store
 
 
@@ -158,7 +159,7 @@ def pairwise_svd(args):
             path_full = os.path.join(OUT_PATH, 'pairwise_sv', args.model)
             if not os.path.exists(path_full):
                 os.makedirs(path_full)
-            savefile = '{}/singularValues_{}_{}_{}.npy'.format(path_full, file1.strip('data/{}/'.format(args.model)).strip('.npy'), file2.split('_')[-1].strip('.npy'), layer.split('/')[0])
+            savefile = '{}/%s_{}_{}_{}.npy'.format(path_full, file1.strip('data/{}/'.format(args.model)).strip('.npy'), file2.split('_')[-1].strip('.npy'), layer.split('/')[0])
 
             if os.path.isfile(savefile):
                 continue
@@ -166,9 +167,10 @@ def pairwise_svd(args):
             h_total = np.vstack((h1_by_layer[layer], h2_by_layer[layer]))
             print(layer, h_total.shape)
             dim = h1_by_layer[layer].shape[0] + h2_by_layer[layer].shape[0]
-            _, s, _ = np.linalg.svd(h_total.reshape(dim, -1), full_matrices=False)
+            u, s, _ = np.linalg.svd(h_total.reshape(dim, -1), full_matrices=False)
 
-            np.save(savefile, s)
+            np.save(savefile % "singularValues", s)
+            np.save(savefile % "singularVectors", u)
 
     activation_file_pairs = []
     for i, file1 in enumerate(files):

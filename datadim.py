@@ -18,7 +18,7 @@ import numpy as np
 
 from IPython import embed
 
-from cifar10vgg import cifar10vgg
+from models.cifar10vgg import cifar10vgg
 from models.mlp import MLP
 
 MAX_PER_CLASS = 1000

@@ -134,7 +134,7 @@ def svd(args):
             # TODO: Should we be taking the multilinear SVD, or reshaping h to (1000, .)?
             # KR: I think we should flatten first b/c in the last couple layers (FC), we will already have "flat" matrices.
             # KR: We might be able to speed up by not calculating u, v if we aren't planning to use them
-            u, s, vh = np.linalg.svd(h.reshape(MAX_PER_CLASS, -1), full_matrices=False)
+            u, s, vh = np.linalg.svd(h.reshape(MAX_PER_CLASS, -1).T, full_matrices=False)
             # Take the multilinear SVD, and flatten singular values
             # u, s, vh = np.linalg.svd(h, full_matrices=False)
             # s = s.flatten()
@@ -167,7 +167,7 @@ def pairwise_svd(args):
             h_total = np.vstack((h1_by_layer[layer], h2_by_layer[layer]))
             print(layer, h_total.shape)
             dim = h1_by_layer[layer].shape[0] + h2_by_layer[layer].shape[0]
-            u, s, _ = np.linalg.svd(h_total.reshape(dim, -1), full_matrices=False)
+            u, s, _ = np.linalg.svd(h_total.reshape(dim, -1).T, full_matrices=False)
 
             np.save(savefile % "singularValues", s)
             np.save(savefile % "singularVectors", u)

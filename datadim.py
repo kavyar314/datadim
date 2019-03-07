@@ -171,7 +171,7 @@ def pairwise_svd(args):
 
             np.save(savefile % "singularValues", s)
             np.save(savefile % "singularVectors", u)
-
+    files = sorted(files)
     activation_file_pairs = []
     for i, file1 in enumerate(files):
         for file2 in files[i+1:]:

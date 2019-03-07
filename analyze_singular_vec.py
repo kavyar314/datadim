@@ -13,7 +13,7 @@ def cosine_distance(v1, v2):
 if __name__ == '__main__':
 	csv_out = "%d,%d,%d,%04f,%04f,%04f,%04f" # layer, class 1, class 2, (see notebook for order)
 	for layer in layer_list:
-                print("layer =", layer)
+		print("layer =", layer)
 		for i in range(len(class_list)):
 			c1 = class_list[i]
 			# load individual singular vector for c1

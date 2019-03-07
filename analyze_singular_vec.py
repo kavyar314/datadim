@@ -45,6 +45,7 @@ if __name__ == '__main__':
 	csv_out = "%d,%d,%d,%04f,%04f,%04f,%04f" # layer, class 1, class 2, (see notebook for order)
 	files = os.listdir(path_to_svec_pair)
 	for f in files:
+		print(f)
 		attr = f.split('_')
 		c1 = int(attr[3][1])
 		c2 = int(attr[4][1])
@@ -57,7 +58,7 @@ if __name__ == '__main__':
 		# get the first singular vector for c2
 		u_2_1 = vecs_c2[0,:]
 		# load pair singular vector for c1, c2
-		vecs_pair = np.load(os.path.join(path_to_svec_pari,f))
+		vecs_pair = np.load(os.path.join(path_to_svec_pair,f))
 		# get first and second vectors
 		u_12_1 = vecs_pair[0, :]
 		u_12_2 = vecs_pair[1, :]

@@ -46,9 +46,9 @@ if __name__ == '__main__':
 	files = os.listdir(path_to_svec_pair)
 	for f in files:
 		attr = f.split('_')
-		c1 = attr[3]
-		c2 = attr[4]
-		layer = attr[-1].strip('.npy')
+		c1 = int(attr[3][1])
+		c2 = int(attr[4][1])
+		layer = int(attr[-1].strip('.npy'))
 		vecs_c1 = np.load(path_to_svec_one % (c1,layer))
 		# get the first singular vector for c1
 		u_1_1 = vecs_c1[0,:]
@@ -57,7 +57,7 @@ if __name__ == '__main__':
 		# get the first singular vector for c2
 		u_2_1 = vecs_c2[0,:]
 		# load pair singular vector for c1, c2
-		vecs_pair = np.load(path_to_svec_pair % (c1, c2, layer))
+		vecs_pair = np.load(os.path.join(path_to_svec_pari,f))
 		# get first and second vectors
 		u_12_1 = vecs_pair[0, :]
 		u_12_2 = vecs_pair[1, :]

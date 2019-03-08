@@ -53,18 +53,18 @@ if __name__ == '__main__':
 		vecs_c1 = np.load(path_to_svec_one % (c1,layer))
 		print("vecs_c1 shape is", vecs_c1.shape)
 		# get the first singular vector for c1
-		u_1_1 = vecs_c1[0,:]
+		u_1_1 = vecs_c1.T[0,:]
 		# load individual singular vector for c2
 		vecs_c2 = np.load(path_to_svec_one % (c2, layer))
 		print("vecs_c2 shape is", vecs_c2.shape)
 		# get the first singular vector for c2
-		u_2_1 = vecs_c2[0,:]
+		u_2_1 = vecs_c2.T[0,:]
 		# load pair singular vector for c1, c2
 		vecs_pair = np.load(os.path.join(path_to_svec_pair,f))
 		print("vecs_pair shape is", vecs_pair.shape)
 		# get first and second vectors
-		u_12_1 = vecs_pair[0, :]
-		u_12_2 = vecs_pair[1, :]
+		u_12_1 = vecs_pair.T[0, :]
+		u_12_2 = vecs_pair.T[1, :]
 		# find cosine distances
 		c1_11 = cosine_distance(u_1_1, u_12_1)
 		c1_12 = cosine_distance(u_1_1, u_12_2)

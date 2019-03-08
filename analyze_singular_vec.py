@@ -43,7 +43,7 @@ def cosine_distance(v1, v2):
 
 if __name__ == '__main__':
 	csv_out = "%d,%d,%d,%04f,%04f,%04f,%04f" # layer, class 1, class 2, (see notebook for order)
-	files = os.listdir(path_to_svec_pair)
+	files = [svec_file for svec_file in os.listdir(path_to_svec_pair) if 'Vector' in svec_file]
 	for f in files:
 		print(f)
 		attr = f.split('_')

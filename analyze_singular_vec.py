@@ -5,7 +5,7 @@ import os
 class_list = range(10)
 layer_list = range(1,15)
 out_file = 'singular_vector_distances.csv'
-path_to_svec_one = './singular_values_vecs/vgg/singularVectors_cifar10_train_c%d_activation_%d.npy'
+path_to_svec_one = './singular_values_vecs/vgg/singularVectors_cifar10_train_c%d_%s_%d.npy'
 path_to_svec_pair = './pairwise_sv/vgg/'
 fmt = 'singularVectors_cifar10_train_c%d_c%d_activation_%d.npy'
 
@@ -50,12 +50,13 @@ if __name__ == '__main__':
 		c1 = int(attr[3][1])
 		c2 = int(attr[4][1])
 		layer = int(attr[-1].strip('.npy'))
-		vecs_c1 = np.load(path_to_svec_one % (c1,layer))
+		act_inp = attr[-2]
+		vecs_c1 = np.load(path_to_svec_one % (c1, act_inp,layer))
 		print("vecs_c1 shape is", vecs_c1.shape)
 		# get the first singular vector for c1
 		u_1_1 = vecs_c1.T[0,:]
 		# load individual singular vector for c2
-		vecs_c2 = np.load(path_to_svec_one % (c2, layer))
+		vecs_c2 = np.load(path_to_svec_one % (c2, act_inp, layer))
 		print("vecs_c2 shape is", vecs_c2.shape)
 		# get the first singular vector for c2
 		u_2_1 = vecs_c2.T[0,:]

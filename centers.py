@@ -1,4 +1,5 @@
 import numpy as np
+import json
 
 path_to_activations = './data/vgg/cifar10_train_c%d.npy'
 out_file = 'centers.json'
@@ -26,7 +27,8 @@ def centers_by_layer():
 
 if __name__ == '__main__':
 	d = centers_by_layer()
-	with open(out_file) as f:
-		f.write(d)
+	json_d = json.dumps(d)
+	with open(out_file, 'w') as f:
+		f.write(json_d)
 
 

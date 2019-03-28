@@ -14,8 +14,10 @@ def find_centers(class_number):
 def centers_by_layer():
 	centers_by_class = {}
 	for class_number in range(10):
+		print("class_number", class_number)
 		centers_by_class[class_number] = find_centers(class_number)
 	centers_by_layer_dict = {}
+	print("fixing dictionary")
 	for k in centers_by_class[0].keys():
 		centers_by_layer_dict[k] = {}
 		for i in range(10):

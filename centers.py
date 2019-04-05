@@ -43,7 +43,7 @@ def pairwise_vectors(centers_by_layer_dictionary):
 
 if __name__ == '__main__':
 	d = centers_by_layer()
-	vectors = pairwise_vectors(d)
 	np.save(out_file, d)
+	vectors = pairwise_vectors(d)
 	np.save(out_file_vectors, vectors)
 

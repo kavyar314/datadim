@@ -52,7 +52,7 @@ if __name__ == '__main__':
 			next_line = csv_out % (layer, c1, c2, c1_11, c1_12, c2_11, c2_12)
 		if CENTERS:
 			print("calculating distance between singular vec and vec between centers")
-			center_vec = center_vec_dict[(c1,c2)]
+			center_vec = center_vec_dict[layer][(c1,c2)]
 			c1_1_c = cosine_distance(u_1_1, center_vec)
 			c2_1_c = cosine_distance(u_2_1, center_vec)
 			c12_1_c = cosine_distance(u_12_1, center_vec)

@@ -33,7 +33,8 @@ def pairwise_vectors(centers_by_layer_dictionary):
 	d = centers_by_layer_dictionary
 	out_dict = {}
 	for layer in centers_by_layer_dictionary.keys():
-		out_dict[layer] = {}
+		layer_num = int(layer.split('/')[0].split('_')[-1])
+		out_dict[layer_num] = {}
 		for i in class_list:
 			for j in class_list[i+1:]:
 				vect = d[layer][i] - d[layer][j]

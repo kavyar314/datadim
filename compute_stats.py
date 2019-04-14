@@ -41,7 +41,7 @@ def all_the_stats(singular_values, specs, outfile_path, p_list=p_list):
 	#stuff
 	# 5%, high p-norm of spectrum, \sigma_2/\sigma_1, \sigma_3/\sigma_1
 	details = specs.split('_')
-	five_percent = singular_values[singular_values.shape[0]/20]/singular_values[0]
+	five_percent = singular_values[singular_values.shape[0]//20]/singular_values[0]
 	p_norms = [str(np.linalg.norm(singular_values/singular_values[0], p)) for p in p_list]
 	first_dropoff = singular_values[1]/singular_values[0]
 	second_dropoff = singular_values[2]/singular_values[0]
@@ -55,7 +55,7 @@ if __name__ == '__main__':
 	#parser.add_argument('--n_stats', type=str)
 	#args = parser.parse_args()
 	full_path_to_sv = os.path.join(PATH_TO_SV, model)
-	sv_files = [f for f in os.listdir(full_path_to_sv) if '.npy' in f]
+	sv_files = [f for f in os.listdir(full_path_to_sv) if '.npy' in f and 'singularValues' in f]
 	outfile_path = STAT_FILE_FORMAT % datetime.datetime.fromtimestamp(time.time()).isoformat()
 	for f in sv_files:
 		try:
@@ -66,4 +66,4 @@ if __name__ == '__main__':
 		except:
 			with open(FAILED_FILES, 'a') as fail:
 				fail.write(f)
-			print("{} failed".format(f))
+			print("{} failed\ns".format(f))

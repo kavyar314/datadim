@@ -172,10 +172,10 @@ def pairwise_svd(args):
                 continue
 
             h_total = np.vstack((h1_by_layer[layer], h2_by_layer[layer]))
+            dim = h1_by_layer[layer].shape[0] + h2_by_layer[layer].shape[0]
             reshaped_h_total = h_total.reshape(dim, -1).T
             centered_h_total = (reshaped_h_total.T - np.mean(reshaped_h_total, axis = 1)).T
             print(layer, centered_h_total.shape)
-            dim = h1_by_layer[layer].shape[0] + h2_by_layer[layer].shape[0]
             u, s, _ = np.linalg.svd(centered_h_total, full_matrices=False)
 
             np.save(savefile % "singularValues", s)

@@ -27,6 +27,9 @@ OUT_PATH = './'
 
 logging.basicConfig(level=logging.DEBUG)
 
+folder = 'singular_values_vecs_centered'
+folder_pair = 'pairwise_sv_centered'
+
 
 def make_splits():
     (x_train, y_train), (x_test, y_test) = cifar10.load_data()
@@ -134,12 +137,16 @@ def svd(args):
             # TODO: Should we be taking the multilinear SVD, or reshaping h to (1000, .)?
             # KR: I think we should flatten first b/c in the last couple layers (FC), we will already have "flat" matrices.
             # KR: We might be able to speed up by not calculating u, v if we aren't planning to use them
-            u, s, vh = np.linalg.svd(h.reshape(MAX_PER_CLASS, -1).T, full_matrices=False)
+            reshaped_h = h.reshape(MAX_PER_CLASS, -1).T
+            centered_h = (reshaped_h.T - np.mean(reshaped_h, axis = 1)).T
+            print(centered_h.shape)
+            # note, we want the matrix whose SVD we are computing to have dimensions d x n
+            u, s, vh = np.linalg.svd(centered_h, full_matrices=False)
             # Take the multilinear SVD, and flatten singular values
             # u, s, vh = np.linalg.svd(h, full_matrices=False)
             # s = s.flatten()
 
-            path_full = os.path.join('singular_values_vecs', args.model)
+            path_full = os.path.join(folder, args.model)
             if not os.path.exists(path_full):
                 os.makedirs(path_full)
             savefile = '{}/%s_{}_{}.npy'.format(path_full, filepath.strip('data/{}/'.format(args.model)).strip('.npy'), layer.split('/')[0])
@@ -156,7 +163,7 @@ def pairwise_svd(args):
         h1_by_layer = np.load(file1).item()
         h2_by_layer = np.load(file2).item()
         for layer in h1_by_layer.keys():
-            path_full = os.path.join(OUT_PATH, 'pairwise_sv', args.model)
+            path_full = os.path.join(OUT_PATH, folder_pair, args.model)
             if not os.path.exists(path_full):
                 os.makedirs(path_full)
             savefile = '{}/%s_{}_{}_{}.npy'.format(path_full, file1.strip('data/{}/'.format(args.model)).strip('.npy'), file2.split('_')[-1].strip('.npy'), layer.split('/')[0])
@@ -165,9 +172,11 @@ def pairwise_svd(args):
                 continue
 
             h_total = np.vstack((h1_by_layer[layer], h2_by_layer[layer]))
-            print(layer, h_total.shape)
+            reshaped_h_total = h_total.reshape(dim, -1).T
+            centered_h_total = (reshaped_h_total.T - np.mean(reshaped_h_total, axis = 1)).T
+            print(layer, centered_h_total.shape)
             dim = h1_by_layer[layer].shape[0] + h2_by_layer[layer].shape[0]
-            u, s, _ = np.linalg.svd(h_total.reshape(dim, -1).T, full_matrices=False)
+            u, s, _ = np.linalg.svd(centered_h_total, full_matrices=False)
 
             np.save(savefile % "singularValues", s)
             np.save(savefile % "singularVectors", u)

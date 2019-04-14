@@ -5,18 +5,18 @@ import time
 
 import argparse
 
-OUT_FILE = './singular_value_stats.csv'
+OUT_FILE = './singular_value_stats_centered.csv'
 
-PATH_TO_SV = './singular_values/'
+PATH_TO_SV = './singular_values_vecs_centered/'
 
-FAILED_FILES = './failed_files.txt'
+FAILED_FILES = './failed_files_centered.txt'
 
 n_stats = 'all'
 
 p_list = [5, 10, 20, 30, 50, 75, 100]
 model = 'vgg'
 
-STAT_FILE_FORMAT = './singular_value_statistics_%s.csv'
+STAT_FILE_FORMAT = './singular_value_statistics_centered_%s.csv'
 
 def calc_mean(singular_values):
 	return np.mean(singular_values)

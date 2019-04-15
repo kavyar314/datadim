@@ -175,16 +175,17 @@ def pairwise_svd(args):
             dim = h1_by_layer[layer].shape[0] + h2_by_layer[layer].shape[0]
             reshaped_h_total = h_total.reshape(dim, -1).T
             centered_h_total = (reshaped_h_total.T - np.mean(reshaped_h_total, axis = 1)).T
+            del reshaped_h_total
             print(layer, centered_h_total.shape)
             u, s, _ = np.linalg.svd(centered_h_total, full_matrices=False)
+            del centered_h_total
+
 
             np.save(savefile % "singularValues", s)
             np.save(savefile % "singularVectors", u)
             del u
             del s
             del h_total
-            del reshaped_h_total
-            del centered_h_total
     files = sorted(files)
     activation_file_pairs = []
     for i, file1 in enumerate(files):

@@ -13,5 +13,5 @@ if __name__ == '__main__':
 		spec = f.split('_')
 		spec.pop(0)
 		spec = '_'.join(spec).strip('.npy')
-		print spec
+		print(spec)
 		all_the_stats(sv, spec, outfile_path)

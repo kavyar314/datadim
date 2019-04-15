@@ -3,7 +3,7 @@ import os
 
 from compute_stats import all_the_stats
 
-path_to_pairwise = './pairwise_sv_centered'
+path_to_pairwise = './pairwise_sv_centered/vgg'
 outfile_path = './pairwise_statistics_centered.csv'
 
 if __name__ == '__main__':

@@ -4,6 +4,11 @@
 
 from __future__ import print_function
 import keras
+
+config = tf.ConfigProto( device_count = {'GPU': 1 , 'CPU': 8} ) 
+sess = tf.Session(config=config) 
+keras.backend.set_session(sess)
+
 from keras.datasets import cifar10
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential

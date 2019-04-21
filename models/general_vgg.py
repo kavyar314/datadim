@@ -93,7 +93,7 @@ class cifar10vgg:
         return model
 
     def _conv_relu_bn(self, model, n):
-        model.add(Conv2D(n, (3, 3), padding='same',kernel_regularizer=regularizers.l2(weight_decay)))
+        model.add(Conv2D(n, (3, 3), padding='same',kernel_regularizer=regularizers.l2(self.weight_decay)))
         model.add(Activation('relu'))
         model.add(BatchNormalization())
 

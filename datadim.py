@@ -54,7 +54,9 @@ def make_splits():
 
 def _create_model(model_name):
     if model_name == "vgg":
-        model = cifar10vgg(train=False, weight_file="data/cifar10vgg.h5")
+        model = cifar10vgg(n_reps=3, train=False, weight_file="data/cifar10vgg.h5")
+    if model_name == "vgg19":
+        model = cifar10vgg(n_reps=4, train=False, weight_file="data/cifar10vgg19.h5")
     elif model_name == "mlp5":
         model = MLP(train=False, num_layers=5, hidden_dim=1000, weight_file="models/weights/mlp_l5_h1000.h5")
     elif model_name == "mlp8":
@@ -202,7 +204,7 @@ if __name__=="__main__":
     parser.add_argument("--seed", default=1234, required=False, type=int)
     parser.add_argument("--bs", default=10, required=False, type=int)
     parser.add_argument("--split", choices=["train", "test"], default="train")
-    parser.add_argument("--model", choices=["vgg", "mlp5", "mlp8", "mlp12"], default="vgg")
+    parser.add_argument("--model", choices=["vgg", "vgg19", "mlp5", "mlp8", "mlp12"], default="vgg")
     parser.add_argument("--workers", default=-1, type=int)
     args = parser.parse_args()
 

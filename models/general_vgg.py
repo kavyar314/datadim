@@ -59,25 +59,25 @@ class cifar10vgg:
         model.add(MaxPooling2D(pool_size=(2, 2)))
 
         for _ in range(self.n_reps-1):
-            _conv_relu_bn(256)
+            self._conv_relu_bn(256)
             model.add(Dropout(0.4))
-        _conv_relu_bn(256)
+        self._conv_relu_bn(256)
 
         model.add(MaxPooling2D(pool_size=(2, 2)))
 
 
         for _ in range(self.n_reps-1):
-            _conv_relu_bn(512)
+            self._conv_relu_bn(512)
             model.add(Dropout(0.4))
-        _conv_relu_bn(512)
+        self._conv_relu_bn(512)
 
         model.add(MaxPooling2D(pool_size=(2, 2)))
 
 
         for _ in range(self.n_reps-1):
-            _conv_relu_bn(512)
+            self._conv_relu_bn(512)
             model.add(Dropout(0.4))
-        _conv_relu_bn(512)
+        self._conv_relu_bn(512)
 
         model.add(MaxPooling2D(pool_size=(2, 2)))
         model.add(Dropout(0.5))
@@ -92,7 +92,7 @@ class cifar10vgg:
         model.add(Activation('softmax'))
         return model
 
-    def _conv_relu_bn(n):
+    def _conv_relu_bn(self, n):
         model.add(Conv2D(n, (3, 3), padding='same',kernel_regularizer=regularizers.l2(weight_decay)))
         model.add(Activation('relu'))
         model.add(BatchNormalization())

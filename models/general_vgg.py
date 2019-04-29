@@ -128,7 +128,7 @@ class cifar10vgg:
         #training parameters
         batch_size = 128
         maxepoches = 250
-        learning_rate = 0.1
+        learning_rate = 0.001
         lr_decay = 1e-6
         lr_drop = 20
         # The data, shuffled and split between train and test sets:

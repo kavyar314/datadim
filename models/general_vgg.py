@@ -147,7 +147,7 @@ class cifar10vgg:
 
         filepath = weight_file.strip('.h5') + '_{epoch:02d}' + '.h5'
 
-        periodic_checkpoint = keras.callbacks.ModelCheckpoint(filepath, monitor='val_loss', verbose=0, save_best_only=False, save_weights_only=True, mode='auto', period=10)
+        save_ckpt = keras.callbacks.ModelCheckpoint(filepath, monitor='val_loss', verbose=0, save_best_only=False, save_weights_only=True, mode='auto', period=10)
 
         #data augmentation
         datagen = ImageDataGenerator(

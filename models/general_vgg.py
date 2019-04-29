@@ -143,10 +143,11 @@ class cifar10vgg:
         def lr_scheduler(epoch):
             return learning_rate * (0.5 ** (epoch // lr_drop))
 
-        def save_ckpt(epoch):
-            if epoch % 10 == 0:
-                model.save_weights(weight_file.strip('.h5') + '_epoch%d.h5'%epoch)
         reduce_lr = keras.callbacks.LearningRateScheduler(lr_scheduler)
+
+        filepath = weight_file.strip('.h5') + '_{epoch:02d}' + '.h5'
+
+        periodic_checkpoint = keras.callbacks.ModelCheckpoint(filepath, monitor='val_loss', verbose=0, save_best_only=False, save_weights_only=True, mode='auto', period=10)
 
         #data augmentation
         datagen = ImageDataGenerator(

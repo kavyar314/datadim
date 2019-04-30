@@ -24,11 +24,7 @@ class cifar10vgg:
 
         self.model = self.build_model()
         if train:
-            if init_weight_file is None:
-                self.model = self.train(self.model, weight_file)
-            else:
-                self.model.load_weights(init_weight_file)
-                self.model = self.train(self.model, weight_file)
+            self.model = self.train(self.model, weight_file, init_weight_file)
         else:
             self.model.load_weights(weight_file)
 
@@ -126,7 +122,7 @@ class cifar10vgg:
             x = self.normalize_production(x)
         return self.model.predict(x,batch_size)
 
-    def train(self, model, weight_file):
+    def train(self, model, weight_file, init_weight_file):
 
         #training parameters
         batch_size = 128
@@ -173,6 +169,8 @@ class cifar10vgg:
         sgd = optimizers.SGD(lr=learning_rate, decay=lr_decay, momentum=0.9, nesterov=True)
         model.compile(loss='categorical_crossentropy', optimizer=sgd,metrics=['accuracy'])
 
+        if init_weight_file is not None:
+            model.load_weights(init_weight_file)
 
         # training process in a for loop with learning rate drop every 25 epoches.
 

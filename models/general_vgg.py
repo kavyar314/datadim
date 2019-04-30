@@ -24,12 +24,13 @@ class cifar10vgg:
 
         self.model = self.build_model()
         if train:
-            self.model = self.train(self.model, weight_file)
-        elif not train:
+            if init_weight_file is None:
+                self.model = self.train(self.model, weight_file)
+            else:
+                self.model.load_weights(init_weight_file)
+                self.model = self.train(self.model, weight_file)
+        else:
             self.model.load_weights(weight_file)
-        elif train=='initialized':
-            self.model.load_weights(init_weight_file)
-            self.model = self.train(self.model, weight_file)
 
     def build_model(self):
         # Build the network of vgg for 10 classes with massive dropout and weight decay as described in the paper.

@@ -16,7 +16,7 @@ from keras import backend as K
 from keras import regularizers
 
 class cifar10vgg:
-    def __init__(self, n_reps=3, train=True, weight_file='cifar10vgg.h5'):
+    def __init__(self, n_reps=3, train=True, weight_file='cifar10vgg.h5', init_weight_file=None):
         self.num_classes = 10
         self.weight_decay = 0.0005
         self.x_shape = [32,32,3]
@@ -25,9 +25,11 @@ class cifar10vgg:
         self.model = self.build_model()
         if train:
             self.model = self.train(self.model, weight_file)
-        else:
+        elif not train:
             self.model.load_weights(weight_file)
-
+        elif train=='initialized':
+            self.model.load_weights(init_weight_file)
+            self.model = self.train(self.model, weight_file)
 
     def build_model(self):
         # Build the network of vgg for 10 classes with massive dropout and weight decay as described in the paper.

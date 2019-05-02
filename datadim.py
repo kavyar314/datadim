@@ -55,8 +55,14 @@ def make_splits():
 def _create_model(model_name):
     if model_name == "vgg":
         model = cifar10vgg(n_reps=3, train=False, weight_file="data/cifar10vgg.h5")
-    if model_name == "vgg19":
-        model = cifar10vgg(n_reps=4, train=False, weight_file="data/cifar10vgg19.h5")
+    if model_name == "vgg19_89acc":
+        model = cifar10vgg(n_reps=4, train=False, weight_file="cifar10_vgg19weights_init130-50-40_5e-3lr_30.h5")
+    if model_name == "vgg19_50ep":
+        model = cifar10vgg(n_reps=4, train=False, weight_file="cifar10_vgg19weights_50.h5")
+    if model_name == "vgg19_100ep":
+        model = cifar10vgg(n_reps=4, train=False, weight_file="cifar10_vgg19weights_100.h5")
+    if model_name == "vgg19_150ep":
+        model = cifar10vgg(n_reps=4, train=False, weight_file="cifar10_vgg19weights_init130_20.h5")
     elif model_name == "mlp5":
         model = MLP(train=False, num_layers=5, hidden_dim=1000, weight_file="models/weights/mlp_l5_h1000.h5")
     elif model_name == "mlp8":

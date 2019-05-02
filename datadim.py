@@ -19,6 +19,7 @@ import numpy as np
 from IPython import embed
 
 from models.cifar10vgg import cifar10vgg
+from models.general_vgg import cifar10vgg as general_vgg
 from models.mlp import MLP
 
 MAX_PER_CLASS = 1000
@@ -56,13 +57,7 @@ def _create_model(model_name):
     if model_name == "vgg":
         model = cifar10vgg(n_reps=3, train=False, weight_file="data/cifar10vgg.h5")
     if model_name == "vgg19_89acc":
-        model = cifar10vgg(n_reps=4, train=False, weight_file="cifar10_vgg19weights_init130-50-40_5e-3lr_30.h5")
-    if model_name == "vgg19_50ep":
-        model = cifar10vgg(n_reps=4, train=False, weight_file="cifar10_vgg19weights_50.h5")
-    if model_name == "vgg19_100ep":
-        model = cifar10vgg(n_reps=4, train=False, weight_file="cifar10_vgg19weights_100.h5")
-    if model_name == "vgg19_150ep":
-        model = cifar10vgg(n_reps=4, train=False, weight_file="cifar10_vgg19weights_init130_20.h5")
+        model = general_vgg(n_reps=4, train=False, weight_file="cifar10_vgg19weights_init130-50-40_5e-3lr_30.h5")
     elif model_name == "mlp5":
         model = MLP(train=False, num_layers=5, hidden_dim=1000, weight_file="models/weights/mlp_l5_h1000.h5")
     elif model_name == "mlp8":
@@ -210,7 +205,7 @@ if __name__=="__main__":
     parser.add_argument("--seed", default=1234, required=False, type=int)
     parser.add_argument("--bs", default=10, required=False, type=int)
     parser.add_argument("--split", choices=["train", "test"], default="train")
-    parser.add_argument("--model", choices=["vgg", "vgg19", "mlp5", "mlp8", "mlp12"], default="vgg")
+    parser.add_argument("--model", choices=["vgg", "vgg19_89acc", "mlp5", "mlp8", "mlp12"], default="vgg")
     parser.add_argument("--workers", default=-1, type=int)
     args = parser.parse_args()
 

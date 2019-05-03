@@ -105,7 +105,7 @@ def evaluate(args):
 
 
 def infer(args):
-    train_by_class, test_by_class = make_splits()
+    train_by_class, test_by_class = make_splits(args)
     XY_by_class = train_by_class if args.split == "train" else test_by_class
 
     model = _create_model(args.model)

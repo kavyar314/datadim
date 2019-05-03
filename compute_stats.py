@@ -5,7 +5,7 @@ import time
 
 import argparse
 
-model = 'vgg'
+model = 'vgg19_89acc'
 
 OUT_FILE = './singular_value_stats_centered_%s.csv' % model
 
@@ -42,11 +42,13 @@ def all_the_stats(singular_values, specs, outfile_path, p_list=p_list):
 	#stuff
 	# 5%, high p-norm of spectrum, \sigma_2/\sigma_1, \sigma_3/\sigma_1
 	details = specs.split('_')
+	tenth = singular_values[9]/singular_values[0]
+	hundredth = singular_values[min(99, singular_values.shape[0]-1)]/singular_values[0]
 	five_percent = singular_values[singular_values.shape[0]//20]/singular_values[0]
 	p_norms = [str(np.linalg.norm(singular_values/singular_values[0], p)) for p in p_list]
 	first_dropoff = singular_values[1]/singular_values[0]
 	second_dropoff = singular_values[2]/singular_values[0]
-	out = "{}, {}, {}, {}, {}, {}, {}, {}\n".format(details[1], details[2], details[3], details[5], five_percent, ','.join(p_norms), first_dropoff, second_dropoff)
+	out = "{}, {}, {}, {}, {}, {}, {}, {}, {}, {}\n".format(details[1], details[2], details[3], details[5], tenth, hundredth, five_percent, ','.join(p_norms), first_dropoff, second_dropoff)
 	with open(outfile_path, 'a') as f:
 		f.write(out)
 

@@ -3,8 +3,8 @@ import os
 
 from compute_stats import all_the_stats
 
-path_to_pairwise = './pairwise_sv_centered/vgg'
-outfile_path = './pairwise_statistics_centered.csv'
+path_to_pairwise = './pairwise_sv_centered/vgg19_89acc'
+outfile_path = './pairwise_statistics_centered_vgg19_89acc.csv'
 
 if __name__ == '__main__':
 	sv_files = [f for f in os.listdir(path_to_pairwise) if '.npy' in f and 'singularValues' in f]

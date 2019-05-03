@@ -15,12 +15,16 @@ from keras.datasets import cifar10
 from keras import optimizers
 import keract
 import numpy as np
+from keras.applications.vgg16 import VGG16
+from keras.applications.vgg19 import VGG19
 
 from IPython import embed
 
 from models.cifar10vgg import cifar10vgg
 from models.general_vgg import cifar10vgg as general_vgg
 from models.mlp import MLP
+
+import load_imagenet
 
 MAX_PER_CLASS = 1000
 CIFAR10_CLASSES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -32,23 +36,27 @@ folder = 'singular_values_vecs_centered'
 folder_pair = 'pairwise_sv_centered'
 
 
-def make_splits():
-    (x_train, y_train), (x_test, y_test) = cifar10.load_data()
+def make_splits(args):
+    if args.dataset=='cifar10':
+        (x_train, y_train), (x_test, y_test) = cifar10.load_data()
 
-    train_by_class = {}
-    test_by_class = {}
+        train_by_class = {}
+        test_by_class = {}
 
-    for cls in CIFAR10_CLASSES:
-        # Randomly sample datapoints from class
-        idx, _ = np.where(y_train == cls)
-        idx_train = np.random.choice(idx, MAX_PER_CLASS, replace=False)
-        train_by_class[cls] = (x_train[idx_train], y_train[idx_train])
+        for cls in CIFAR10_CLASSES:
+            # Randomly sample datapoints from class
+            idx, _ = np.where(y_train == cls)
+            idx_train = np.random.choice(idx, MAX_PER_CLASS, replace=False)
+            train_by_class[cls] = (x_train[idx_train], y_train[idx_train])
 
-        idx_test, _ = np.where(y_test == cls)
-        test_by_class[cls] = (x_test[idx_test], y_test[idx_test])
-        assert(idx_test.size <= MAX_PER_CLASS)
+            idx_test, _ = np.where(y_test == cls)
+            test_by_class[cls] = (x_test[idx_test], y_test[idx_test])
+            assert(idx_test.size <= MAX_PER_CLASS)
 
-        logging.info("Class %d Train: %s Test %s", cls, train_by_class[cls][0].shape, test_by_class[cls][0].shape)
+            logging.info("Class %d Train: %s Test %s", cls, train_by_class[cls][0].shape, test_by_class[cls][0].shape)
+    elif args.dataset=='imagenet':
+        train_by_class, test_by_class = load_imagenet.get_imagenet_data()
+
 
     return train_by_class, test_by_class
 
@@ -58,6 +66,10 @@ def _create_model(model_name):
         model = cifar10vgg(n_reps=3, train=False, weight_file="data/cifar10vgg.h5")
     if model_name == "vgg19_89acc":
         model = general_vgg(n_reps=4, train=False, weight_file="cifar10_vgg19weights_init130-50-40_5e-3lr_30.h5")
+    if model_name == "vgg16in":
+        model = VGG16(include_top=True, weights='imagenet', input_tensor=None, input_shape=None, pooling=None, classes=1000)
+    elif model_name == "vgg19in":
+        model = VGG19(include_top=True, weights='imagenet', input_tensor=None, input_shape=None, pooling=None, classes=1000)
     elif model_name == "mlp5":
         model = MLP(train=False, num_layers=5, hidden_dim=1000, weight_file="models/weights/mlp_l5_h1000.h5")
     elif model_name == "mlp8":
@@ -207,7 +219,8 @@ if __name__=="__main__":
     parser.add_argument("--seed", default=1234, required=False, type=int)
     parser.add_argument("--bs", default=10, required=False, type=int)
     parser.add_argument("--split", choices=["train", "test"], default="train")
-    parser.add_argument("--model", choices=["vgg", "vgg19_89acc", "mlp5", "mlp8", "mlp12"], default="vgg")
+    parser.add_argument("--model", choices=["vgg", "vgg19_89acc", "mlp5", "mlp8", "mlp12", "vgg16in", "vgg19in"], default="vgg")
+    parser.add_argument("--dataset", choices=["cifar10", "imagenet"], default="cifar10")
     parser.add_argument("--workers", default=-1, type=int)
     args = parser.parse_args()
 

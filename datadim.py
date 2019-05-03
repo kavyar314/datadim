@@ -120,11 +120,10 @@ def infer(args):
             batch = X[i:i+args.bs]
             if args.dataset=="cifar10":
                 batch = model.normalize_production(batch)
-            if args.model != "vgg16in" or args.model != "vgg19in":
-                activations = keract.get_activations(model.model, batch)
-            else:
+            if args.model == "vgg16in" or args.model == "vgg19in":
                 activations = keract.get_activations(model, batch)
-
+            else:
+                activations = keract.get_activations(model.model, batch)
             by_layer["input_0"].append(batch)  # Input after normalization
 
             for layer, h in activations.items():

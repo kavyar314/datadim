@@ -13,7 +13,7 @@ def get_imagenet_data():
 	# find all the classes
 	classes = os.listdir(os.path.join(path_to_imagenet, 'train'))
 	# select subset of m classes
-	to_use = random.choices(classes, k=m)
+	to_use = list(set([random.choice(classes) for _ in range(2*m)]))[:m]
 	# write to txt file in same area as activations
 	with open(os.path.join(path_to_activations, 'used_classes.txt'), 'w') as f:
 		print("hi")

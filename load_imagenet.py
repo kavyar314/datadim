@@ -5,7 +5,7 @@ from skimage.io import imread
 from skimage.transform import resize
 import numpy as np
 
-path_to_imagenet = '/Users/KRavichandran/Documents/MIT/Research/tiny-imagenet-200/'
+path_to_imagenet = './dataset/tiny-imagenet-200/'
 m = 15
 path_to_activations = './'
 

@@ -118,7 +118,8 @@ def infer(args):
         for i in range(0, X.shape[0], args.bs):
             logging.info("Inference for class %d: %d/%d", cls, i, X.shape[0])
             batch = X[i:i+args.bs]
-            batch = model.normalize_production(batch)
+            if args.dataset=="cifar10":
+                batch = model.normalize_production(batch)
             activations = keract.get_activations(model.model, batch)
 
             by_layer["input_0"].append(batch)  # Input after normalization

@@ -29,7 +29,7 @@ def get_imagenet_data():
 		for img in [f for f in os.listdir(img_path) if '.JPEG' in f]:
 			im = resize(imread(os.path.join(img_path, img)), (224,224,3))
 			images_in_class.append(im)
-		train_by_class[cls] = np.stack(tuple(images_in_class))
+		train_by_class[cls] = (np.stack(tuple(images_in_class)), [cls for _ in range(len(images_in_class))])
 	# train_by_class[cls] = array
 
 	return train_by_class, test_by_class

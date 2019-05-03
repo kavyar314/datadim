@@ -99,6 +99,8 @@ def infer(args):
     model = _create_model(args.model)
 
     for cls, (X, _y) in XY_by_class.items():
+        if os.path.isfile("data/{}/cifar10_{}_c{}.npy".format(args.model, args.split, cls)):
+            continue
         by_layer = defaultdict(list)
 
         for i in range(0, X.shape[0], args.bs):

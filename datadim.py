@@ -111,7 +111,7 @@ def infer(args):
     model = _create_model(args.model)
 
     for cls, (X, _y) in XY_by_class.items():
-        if os.path.isfile("data/{}/cifar10_{}_c{}.npy".format(args.model, args.split, cls)):
+        if os.path.isfile("data/{}/{}_{}_c{}.npy".format(args.model, args.dataset, args.split, cls)):
             continue
         by_layer = defaultdict(list)
 
@@ -139,7 +139,7 @@ def infer(args):
             by_layer[layer] = np.concatenate(h_list, axis=0)
 
         os.makedirs("data/{}".format(args.model), exist_ok=True)
-        savefile = "data/{}/cifar10_{}_c{}.npy".format(args.model, args.split, cls)
+        savefile = "data/{}/{}_{}_c{}.npy".format(args.model, args.dataset, args.split, cls)
         logging.info("Saving activations to %s", savefile)
         np.save(savefile, by_layer)
 
@@ -148,7 +148,7 @@ def svd(args):
     '''
     NB this can't be run without fixing file paths
     '''
-    filepaths = glob("data/{}/cifar10_{}*.npy".format(args.model, args.split))
+    filepaths = glob("data/{}/{}_{}*.npy".format(args.model, args.dataset, args.split))
     for filepath in filepaths:
         h_by_layer = np.load(filepath).item()
 
@@ -176,7 +176,7 @@ def svd(args):
 
 
 def pairwise_svd(args):
-    files = glob("data/{}/cifar10_{}*.npy".format(args.model, args.split))
+    files = glob("data/{}/{}_{}*.npy".format(args.model, args.dataset, args.split))
     print("Found %d activation files" % len(files))
 
     def compute(file1, file2):

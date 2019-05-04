@@ -63,7 +63,7 @@ def make_splits(args):
 
 def _create_model(model_name):
     if model_name == "vgg":
-        model = cifar10vgg(n_reps=3, train=False, weight_file="data/cifar10vgg.h5")
+        model = cifar10vgg(train=False, weight_file="data/cifar10vgg.h5")
     if model_name == "vgg19_89acc":
         model = general_vgg(n_reps=4, train=False, weight_file="cifar10_vgg19weights_init130-50-40_5e-3lr_30.h5")
     if model_name == "vgg16in":
@@ -128,7 +128,7 @@ def infer(args):
 
             for layer, h in activations.items():
                 # Select activations after Relu and Softmax
-                if layer.startswith("activation_"):
+                if "Relu" in layer:
                     # TODO(ajayjain): Do we need to know whether this example
                     # was misclassified? The dimensionality of the true positive
                     # examples may be less than the TP + FN examples

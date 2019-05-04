@@ -139,7 +139,7 @@ def infer(args):
         # Concatenate activations and save tensors
         for layer, h_list in by_layer.items():
             by_layer[layer] = np.concatenate(h_list, axis=0)
-
+        print(by_layer.keys())
         os.makedirs("data/{}".format(args.model), exist_ok=True)
         savefile = "data/{}/{}_{}_c{}.npy".format(args.model, args.dataset, args.split, cls)
         logging.info("Saving activations to %s", savefile)

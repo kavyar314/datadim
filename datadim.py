@@ -133,6 +133,8 @@ def infer(args):
                     # was misclassified? The dimensionality of the true positive
                     # examples may be less than the TP + FN examples
                     by_layer[layer].append(h)
+                if "Softmax" in layer:
+                    by_layer[layer].append(h)
 
         # Concatenate activations and save tensors
         for layer, h_list in by_layer.items():

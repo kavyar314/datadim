@@ -26,7 +26,9 @@ def get_imagenet_data():
 		print(cls)
 		images_in_class = []
 		img_path = os.path.join(path_to_imagenet, 'train/%s/images/' % cls)
-		for img in [f for f in os.listdir(img_path) if '.JPEG' in f]:
+		imgs = [f for f in os.listdir(img_path) if '.JPEG' in f]
+		used_imgs = random.sample(imgs, 250)
+		for img in used_imgs:
 			im = resize(imread(os.path.join(img_path, img)), (224,224,3))
 			images_in_class.append(im)
 		train_by_class[int(cls[1:])] = (np.stack(tuple(images_in_class)), [int(cls[1:]) for _ in range(len(images_in_class))])

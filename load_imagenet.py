@@ -6,7 +6,7 @@ from skimage.transform import resize
 import numpy as np
 
 path_to_imagenet = './dataset/tiny-imagenet-200/'
-m = 3
+m = 10
 path_to_activations = './'
 
 def get_imagenet_data():

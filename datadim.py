@@ -173,7 +173,7 @@ def pairwise_svd(args):
                 os.makedirs(path_full)
             savefile = '{}/%s_{}_{}_{}.npy'.format(path_full, file1.strip('data/{}/'.format(args.model)).strip('.npy'), file2.split('_')[-1].strip('.npy'), layer.split('/')[0])
 
-            if os.path.isfile(savefile):
+            if os.path.isfile(savefile % "singularValues") and os.path.isfile(savefile % "singularVectors"):
                 continue
 
             h_total = np.vstack((h1_by_layer[layer], h2_by_layer[layer]))

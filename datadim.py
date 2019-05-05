@@ -63,7 +63,7 @@ def _create_model(model_name):
     elif model_name == "mlp8":
         model = MLP(train=False, num_layers=8, hidden_dim=1000, weight_file="models/weights/mlp_l8_h1000.h5")
     elif model_name == "mlp12":
-        model = MLP(train=False, num_layers=12, hidden_dim=1000, weight_file="models/weights/mlp_l12_h1000.h5")
+        model = MLP(train=False, num_layers=12, hidden_dim=1000, weight_file="data/mlp.h5")
 
     return model
 

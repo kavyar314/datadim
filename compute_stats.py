@@ -5,7 +5,7 @@ import time
 
 import argparse
 
-model = 'vgg19_89acc'
+model = 'vgg16in'
 
 OUT_FILE = './singular_value_stats_centered_%s.csv' % model
 
@@ -43,6 +43,10 @@ def all_the_stats(singular_values, specs, outfile_path, p_list=p_list):
 	# 5%, high p-norm of spectrum, \sigma_2/\sigma_1, \sigma_3/\sigma_1
 	details = specs.split('_')
 	print(details)
+	if len(details) == 6:
+		layer_name = details[4] + '_' + details[5]
+	else:
+		layer_name = details[4]
 	print(singular_values.shape)
 	tenth = singular_values[9]/singular_values[0]
 	print("1")
@@ -57,7 +61,7 @@ def all_the_stats(singular_values, specs, outfile_path, p_list=p_list):
 	print("5")
 	second_dropoff = singular_values[2]/singular_values[0]
 	print("6")
-	out = "{}, {}, {}, {}, {}, {}, {}, {}, {}, {}\n".format(details[1], details[2], details[3], details[5], tenth, hundredth, five_percent, ','.join(p_norms), first_dropoff, second_dropoff)
+	out = "{}, {}, {}, {}, {}, {}, {}, {}, {}, {}\n".format(details[1], details[2], details[3], layer_name, tenth, hundredth, five_percent, ','.join(p_norms), first_dropoff, second_dropoff)
 	print("7")
 	with open(outfile_path, 'a') as f:
 		f.write(out)

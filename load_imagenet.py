@@ -5,6 +5,10 @@ from skimage.io import imread
 from skimage.transform import resize
 import numpy as np
 
+from keras.preprocessing import image
+from keras.applications.vgg16 import preprocess_input
+import numpy as np
+
 path_to_imagenet = './dataset/tiny-imagenet-200/'
 m = 10
 path_to_activations = './'
@@ -29,7 +33,8 @@ def get_imagenet_data():
 		imgs = [f for f in os.listdir(img_path) if '.JPEG' in f]
 		used_imgs = random.sample(imgs, 250)
 		for img in used_imgs:
-			im = resize(imread(os.path.join(img_path, img)), (224,224,3))
+			im_loaded = image.image_to_array(image.load_image(os.path.join(img_path, img), target_size=(224,224)))
+			im = preprocess_input(im_loaded)
 			images_in_class.append(im)
 		train_by_class[int(cls[1:])] = (np.stack(tuple(images_in_class)), [int(cls[1:]) for _ in range(len(images_in_class))])
 	# train_by_class[cls] = array

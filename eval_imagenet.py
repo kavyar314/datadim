@@ -10,6 +10,7 @@ classes = train.keys()
 correct = 0
 total = 0
 for k in classes:
+	print("predicting class k")
     predicts = vgg.predict(train[k][0])
     decode = decode_predictions(predicts)
     top = [int(p[0][0].strip('n'))==k for p in decode]

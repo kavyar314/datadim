@@ -9,7 +9,7 @@ from keras.preprocessing import image
 from keras.applications.vgg16 import preprocess_input
 import numpy as np
 
-path_to_imagenet = './dataset/tiny-imagenet-200/'
+path_to_imagenet = '../tiny-imagenet-200'#'./dataset/tiny-imagenet-200/'
 m = 10
 path_to_activations = './'
 
@@ -31,12 +31,11 @@ def get_imagenet_data():
 		images_in_class = []
 		img_path = os.path.join(path_to_imagenet, 'train/%s/images/' % cls)
 		imgs = [f for f in os.listdir(img_path) if '.JPEG' in f]
-		used_imgs = random.sample(imgs, 250)
+		used_imgs = random.sample(imgs, 100)
 		for img in used_imgs:
-			im_loaded = image.image_to_array(image.load_image(os.path.join(img_path, img), target_size=(224,224)))
-			im = preprocess_input(im_loaded)
+			im = image.img_to_array(image.load_img(os.path.join(img_path, img), target_size=(224,224)))
 			images_in_class.append(im)
-		train_by_class[int(cls[1:])] = (np.stack(tuple(images_in_class)), [int(cls[1:]) for _ in range(len(images_in_class))])
+		train_by_class[int(cls[1:])] = (preprocess_input(np.stack(tuple(images_in_class))), [int(cls[1:]) for _ in range(len(images_in_class))])
 	# train_by_class[cls] = array
 
 	return train_by_class, test_by_class

@@ -9,7 +9,7 @@ from keras.preprocessing import image
 from keras.applications.vgg16 import preprocess_input
 import numpy as np
 
-path_to_imagenet = '../tiny-imagenet-200'#'./dataset/tiny-imagenet-200/'
+path_to_imagenet = './dataset/tiny-imagenet-200/'
 m = 10
 path_to_activations = './'
 

@@ -5,17 +5,17 @@ import time
 
 import argparse
 
-model = 'vgg19_89acc'
+model = 'vgg'
 
 OUT_FILE = './singular_value_stats_centered_%s.csv' % model
 
 PATH_TO_SV = './singular_values_vecs_centered/'
 
-FAILED_FILES = './failed_files_centered_%s.txt' % model
+FAILED_FILES = './failed_files_centered_1,2norms_%s.txt' % model
 
 n_stats = 'all'
 
-p_list = [5, 10, 20, 30, 50, 75, 100]
+p_list = [1, 2, 10, 20, 30, 50, 75]
 
 STAT_FILE_FORMAT = './singular_value_statistics_centered_' + model + '_%s.csv'
 

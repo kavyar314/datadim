@@ -209,7 +209,7 @@ if __name__=="__main__":
     parser.add_argument("--seed", default=1234, required=False, type=int)
     parser.add_argument("--bs", default=10, required=False, type=int)
     parser.add_argument("--split", choices=["train", "test"], default="train")
-    parser.add_argument("--model", choices=["vgg", "vgg19_89acc", "mlp5", "mlp8", "mlp12"], default="vgg")
+    parser.add_argument("--model", choices=["vgg", "vgg19_89acc", "vgg19_highestacc", "mlp5", "mlp8", "mlp12"], default="vgg")
     parser.add_argument("--workers", default=-1, type=int)
     args = parser.parse_args()
 
